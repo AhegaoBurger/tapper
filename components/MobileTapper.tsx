@@ -9,12 +9,12 @@ import { CoolMode } from "@/components/magicui/cool-mode";
 
 export default function MobileClicker() {
   const [user, setUser] = useState<WebAppUser | null>(null);
-  const mockUser: WebAppUser = {
-    id: 1234567890,
-    username: "Hamster",
-    first_name: "Hamster",
-    last_name: "Hamster",
-  };
+  // const mockUser: WebAppUser = {
+  //   id: 1234567890,
+  //   username: "Hamster",
+  //   first_name: "Hamster",
+  //   last_name: "Hamster",
+  // };
 
   useEffect(() => {
     // Initialize Telegram WebApp
@@ -37,7 +37,7 @@ export default function MobileClicker() {
 
     // setUserId(initData.user?.id.toString() || "anonymous");
     // setUsername(initData.user?.username || "Anonymous Hamster");
-  }, [mockUser]);
+  }, []);
 
   const [score, setScore] = useState(0);
   const [isTapping, setIsTapping] = useState(false);
