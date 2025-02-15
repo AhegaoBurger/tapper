@@ -223,7 +223,7 @@ const applyParticleEffect = (
 };
 
 interface CoolModeProps {
-  children: ReactNode;
+  children: React.ReactElement;
   options?: CoolParticleOptions;
 }
 
@@ -236,5 +236,9 @@ export const CoolMode: React.FC<CoolModeProps> = ({ children, options }) => {
     }
   }, [options]);
 
-  return React.cloneElement(children as React.ReactElement, { ref });
+  // return React.cloneElement(children as React.ReactElement, { ref });
+  // Add type assertion to handle the ref properly
+  return React.cloneElement(children, {
+    ref,
+  } as React.HTMLAttributes<HTMLElement>);
 };
