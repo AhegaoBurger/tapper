@@ -100,6 +100,16 @@ export default function MobileClicker() {
     [user?.id, user?.username, supabase],
   );
 
+  const triggerHapticFeedback = () => {
+    // Try to use impact feedback first (more distinct)
+    if (WebApp.isVersionAtLeast("6.1")) {
+      WebApp.HapticFeedback.impactOccurred("light");
+    } else {
+      // Fallback to notification feedback for older versions
+      WebApp.HapticFeedback.notificationOccurred("success");
+    }
+  };
+
   // Move handleTap definition up
   const handleTap = useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -108,8 +118,8 @@ export default function MobileClicker() {
       setTimeout(() => setIsTapping(false), 100);
       updateScore(score + 1);
 
-      // setIsTapping(true);
-      // setTimeout(() => setIsTapping(false), 150);
+      // Trigger haptic feedback
+      triggerHapticFeedback();
 
       // Get random direction for the frog to jump
       const angle = Math.random() * Math.PI * 2; // Random angle in radians
@@ -147,6 +157,7 @@ export default function MobileClicker() {
           Math.abs(acceleration.y ?? 0) > 10 ||
           Math.abs(acceleration.z ?? 0) > 10)
       ) {
+        triggerHapticFeedback(); // Add haptic feedback for motion events too
         handleTap({} as React.MouseEvent<HTMLButtonElement>);
       }
     },
