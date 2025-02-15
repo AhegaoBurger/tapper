@@ -71,6 +71,29 @@ export default function MobileClicker() {
     [user?.id, user?.username, supabase],
   );
 
+  // Move handleTap definition up
+  const handleTap = useCallback(() => {
+    setScore((prev) => prev + 1);
+    setIsTapping(true);
+    setTimeout(() => setIsTapping(false), 100);
+    updateScore(score + 1);
+  }, [score, updateScore]); // Add dependencies
+
+  const handleMotion = useCallback(
+    (event: DeviceMotionEvent) => {
+      const acceleration = event.acceleration;
+      if (
+        acceleration &&
+        (Math.abs(acceleration.x ?? 0) > 10 ||
+          Math.abs(acceleration.y ?? 0) > 10 ||
+          Math.abs(acceleration.z ?? 0) > 10)
+      ) {
+        handleTap();
+      }
+    },
+    [handleTap],
+  );
+
   useEffect(() => {
     if (typeof window !== "undefined" && "DeviceMotionEvent" in window) {
       setIsMotionSupported(true);
@@ -82,26 +105,7 @@ export default function MobileClicker() {
         window.removeEventListener("devicemotion", handleMotion);
       }
     };
-  }, []);
-
-  const handleTap = () => {
-    setScore((prev) => prev + 1);
-    setIsTapping(true);
-    setTimeout(() => setIsTapping(false), 100);
-    updateScore(score + 1);
-  };
-
-  const handleMotion = (event: DeviceMotionEvent) => {
-    const acceleration = event.acceleration;
-    if (
-      acceleration &&
-      (Math.abs(acceleration.x ?? 0) > 10 ||
-        Math.abs(acceleration.y ?? 0) > 10 ||
-        Math.abs(acceleration.z ?? 0) > 10)
-    ) {
-      handleTap();
-    }
-  };
+  }, [handleMotion]);
 
   return (
     <div className="flex flex-col items-center justify-center w-full h-full">
