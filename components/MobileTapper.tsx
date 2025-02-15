@@ -9,12 +9,41 @@ import { CoolMode } from "@/components/magicui/cool-mode";
 
 export default function MobileClicker() {
   const [user, setUser] = useState<WebAppUser | null>(null);
+  const [score, setScore] = useState(0);
+  const [isTapping, setIsTapping] = useState(false);
+  const [isMotionSupported, setIsMotionSupported] = useState(false);
+
+  const supabase = createClient();
   // const mockUser: WebAppUser = {
   //   id: 1234567890,
   //   username: "Hamster",
   //   first_name: "Hamster",
   //   last_name: "Hamster",
   // };
+
+  // Fetch initial score from database
+  useEffect(() => {
+    const fetchInitialScore = async () => {
+      if (!user?.id) return;
+
+      const { data, error } = await supabase
+        .from("scores")
+        .select("score")
+        .eq("user_id", user.id)
+        .single();
+
+      if (error) {
+        console.error("Error fetching score:", error);
+        return;
+      }
+
+      if (data) {
+        setScore(data.score);
+      }
+    };
+
+    fetchInitialScore();
+  }, [user?.id, supabase]);
 
   useEffect(() => {
     // Initialize Telegram WebApp
@@ -38,12 +67,6 @@ export default function MobileClicker() {
     // setUserId(initData.user?.id.toString() || "anonymous");
     // setUsername(initData.user?.username || "Anonymous Hamster");
   }, []);
-
-  const [score, setScore] = useState(0);
-  const [isTapping, setIsTapping] = useState(false);
-  const [isMotionSupported, setIsMotionSupported] = useState(false);
-
-  const supabase = createClient();
 
   // Save score to Supabase (debounced)
   const updateScore = useCallback(
