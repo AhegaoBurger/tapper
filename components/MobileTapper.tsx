@@ -5,21 +5,22 @@ import { motion, AnimatePresence } from "motion/react";
 import { createClient } from "@/utils/supabase/client";
 import WebApp from "@twa-dev/sdk";
 import type { WebAppUser } from "@twa-dev/types";
+import Image from "next/image";
 
 export default function MobileClicker() {
   const [user, setUser] = useState<WebAppUser | null>(null);
   const [score, setScore] = useState(0);
   const [isTapping, setIsTapping] = useState(false);
   const [isMotionSupported, setIsMotionSupported] = useState(false);
-  const [plusOnes, setPlusOnes] = useState<{ id: number; x: number }[]>([]);
-  // const [jumpingFrogs, setJumpingFrogs] = useState<
-  //   {
-  //     id: number;
-  //     x: number;
-  //     y: number;
-  //     isJump4: boolean;
-  //   }[]
-  // >([]);
+  // const [plusOnes, setPlusOnes] = useState<{ id: number; x: number }[]>([]);
+  const [jumpingFrogs, setJumpingFrogs] = useState<
+    {
+      id: number;
+      x: number;
+      y: number;
+      isJump4: boolean;
+    }[]
+  >([]);
 
   const supabase = createClient();
   const mockUser: WebAppUser = {
@@ -110,22 +111,28 @@ export default function MobileClicker() {
       // setIsTapping(true);
       // setTimeout(() => setIsTapping(false), 150);
 
-      // Get click coordinates relative to the button
-      const button = event.currentTarget;
-      const rect = button.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
+      // Get random direction for the frog to jump
+      const angle = Math.random() * Math.PI * 2; // Random angle in radians
+      const distance = 100; // Distance to jump
+      const jumpX = Math.cos(angle) * distance;
+      const jumpY = Math.sin(angle) * distance;
 
-      const newPlusOne = {
+      // Randomly choose between frog04 and frog05
+      const isJump4 = Math.random() > 0.5;
+
+      const newFrog = {
         id: Date.now(),
-        x: x - rect.width / 2, // Center the +1 on click position
-        y: y - rect.height / 2, // Center the +1 on click position
+        x: jumpX,
+        y: jumpY,
+        isJump4,
       };
-      setPlusOnes((prev) => [...prev, newPlusOne]);
+      setJumpingFrogs((prev) => [...prev, newFrog]);
 
-      // Remove the plus one after animation completes
+      // Remove the jumping frog after animation completes
       setTimeout(() => {
-        setPlusOnes((prev) => prev.filter((item) => item.id !== newPlusOne.id));
+        setJumpingFrogs((prev) =>
+          prev.filter((item) => item.id !== newFrog.id),
+        );
       }, 1000);
     },
     [score, updateScore],
@@ -140,24 +147,7 @@ export default function MobileClicker() {
           Math.abs(acceleration.y ?? 0) > 10 ||
           Math.abs(acceleration.z ?? 0) > 10)
       ) {
-        // handleTap();
-        // For motion events, create +1 at center of button
-        const newPlusOne = {
-          id: Date.now(),
-          x: 0,
-          y: 0,
-        };
-        setPlusOnes((prev) => [...prev, newPlusOne]);
-        setTimeout(() => {
-          setPlusOnes((prev) =>
-            prev.filter((item) => item.id !== newPlusOne.id),
-          );
-        }, 1000);
-
-        setScore((prev) => prev + 1);
-        setIsTapping(true);
-        setTimeout(() => setIsTapping(false), 100);
-        updateScore(score + 1);
+        handleTap({} as React.MouseEvent<HTMLButtonElement>);
       }
     },
     [handleTap],
@@ -181,28 +171,44 @@ export default function MobileClicker() {
       <div className="text-4xl font-bold text-white mb-8">Score: {score}</div>
       <div className="relative">
         <AnimatePresence>
-          {plusOnes.map((plusOne) => (
-            <motion.div
-              key={plusOne.id}
-              className="absolute bottom-full left-1/2 -translate-x-1/2 text-2xl font-bold text-white"
-              initial={{ opacity: 0, y: 0, x: plusOne.x }}
-              animate={{ opacity: 1, y: -50 }}
-              exit={{ opacity: 0, y: -100 }}
-              transition={{ duration: 0.5 }}
-            >
-              +1
-            </motion.div>
+          {jumpingFrogs.map((frog) => (
+            <motion.img
+              key={frog.id}
+              src={frog.isJump4 ? "/Лягуха-03.png" : "/Лягуха-05.png"}
+              alt="Jumping frog"
+              className="absolute w-16 h-16 pointer-events-none"
+              style={{
+                originX: "100%",
+                originY: "100%",
+              }}
+              initial={{ opacity: 1, scale: 1, x: 0, y: 0 }}
+              animate={{
+                opacity: 0,
+                scale: 0.5,
+                x: frog.x,
+                y: frog.y,
+                rotate: frog.x > 0 ? 360 : -360,
+              }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+            />
           ))}
         </AnimatePresence>
         <motion.button
-          className="w-64 h-64 bg-blue-500 rounded-full shadow-lg focus:outline-none flex items-center justify-center"
+          className="w-32 h-32 rounded-full shadow-lg focus:outline-none flex items-center justify-center relative overflow-visible"
           animate={{
             scale: isTapping ? 0.95 : 1,
           }}
           transition={{ type: "spring", stiffness: 300 }}
           onClick={handleTap}
         >
-          <span className="text-white text-4xl font-bold">🐹 TAP!</span>
+          <Image
+            src="/Лягуха-04.png"
+            alt="Still frog"
+            className="w-full h-full"
+            width={1000}
+            height={1000}
+          />
         </motion.button>
       </div>
 
