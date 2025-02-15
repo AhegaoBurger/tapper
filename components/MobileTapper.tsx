@@ -195,7 +195,7 @@ export default function MobileClicker() {
           ))}
         </AnimatePresence>
         <motion.button
-          className="w-32 h-32 rounded-full shadow-lg focus:outline-none flex items-center justify-center relative overflow-visible"
+          className="w-32 h-32 rounded-full focus:outline-none flex items-center justify-center relative overflow-visible"
           animate={{
             scale: isTapping ? 0.95 : 1,
           }}
