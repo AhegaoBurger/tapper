@@ -1,5 +1,5 @@
 {
-  "url": "https://tapper-xi.vercel.app",
+  "url": "http://localhost:3000",
   "name": "Tapper",
-  "iconUrl": "/Лягуха-04.png"
+  "iconUrl": "http://localhost:3000/Лягуха-04.png"
 }

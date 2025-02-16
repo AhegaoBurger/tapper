@@ -1,9 +1,13 @@
-import { THEME, TonConnectUIProvider } from "@tonconnect/ui-react";
+import {
+  THEME,
+  TonConnectUIProvider,
+  TonConnectButton,
+} from "@tonconnect/ui-react";
 
-export default function TonConnectButton() {
+export default function TonConnectComponent() {
   return (
     <TonConnectUIProvider
-      manifestUrl="https://github.com/AhegaoBurger/tapper/tonconnect-manifest.json"
+      manifestUrl="https://tapper-xi.vercel.app/tonconnect-manifest.json"
       uiPreferences={{ theme: THEME.DARK }}
       walletsListConfiguration={{
         includeWallets: [
