@@ -13,9 +13,15 @@ const Leaderboard = dynamic(() => import("@/components/Leaderboard"), {
   loading: () => <div>Loading leaderboard...</div>,
 });
 
+// import TonConnectButton from "@/components/TonConnect";
+const TonConnectButton = dynamic(() => import("@/components/TonConnect"), {
+  ssr: false,
+});
+
 export default function ClientWrapper() {
   return (
     <>
+      <TonConnectButton />
       <MobileClicker />
       <Leaderboard />
     </>
