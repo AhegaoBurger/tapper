@@ -19,7 +19,7 @@ export default function RootLayout({
       <head>
         <AdSense pId="ca-pub-7071713894070581" />
       </head>
-      <body>
+      <body className="h-screen overflow-hidden">
         <Providers>{children}</Providers>
       </body>
     </html>

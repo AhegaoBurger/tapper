@@ -6,10 +6,13 @@ import { createClient } from "@/utils/supabase/client";
 import WebApp from "@twa-dev/sdk";
 import type { WebAppUser } from "@twa-dev/types";
 import Image from "next/image";
+import { useGameStore } from "@/store/gameStore";
 
 export default function MobileClicker() {
+  const { score, setScore, incrementScore } = useGameStore();
+
   const [user, setUser] = useState<WebAppUser | null>(null);
-  const [score, setScore] = useState(0);
+  // const [score, setScore] = useState(0);
   const [isTapping, setIsTapping] = useState(false);
   const [isMotionSupported, setIsMotionSupported] = useState(false);
   // const [plusOnes, setPlusOnes] = useState<{ id: number; x: number }[]>([]);
@@ -113,7 +116,7 @@ export default function MobileClicker() {
   // Move handleTap definition up
   const handleTap = useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
-      setScore((prev) => prev + 1);
+      incrementScore(score);
       setIsTapping(true);
       setTimeout(() => setIsTapping(false), 100);
       updateScore(score + 1);
@@ -179,7 +182,7 @@ export default function MobileClicker() {
 
   return (
     <div className="flex flex-col items-center justify-center w-full h-full">
-      <div className="text-4xl font-bold text-white mb-8">Score: {score}</div>
+      {/* <div className="text-4xl font-bold text-white mb-8">Score: {score}</div> */}
       <div className="relative">
         <AnimatePresence>
           {jumpingFrogs.map((frog) => (
@@ -187,7 +190,7 @@ export default function MobileClicker() {
               key={frog.id}
               src={frog.isJump4 ? "/Лягуха-03.png" : "/Лягуха-05.png"}
               alt="Jumping frog"
-              className="absolute w-16 h-16 pointer-events-none"
+              className="absolute w-16 h-16 pointer-events-none filter drop-shadow-lg"
               style={{
                 originX: "100%",
                 originY: "100%",
@@ -206,7 +209,8 @@ export default function MobileClicker() {
           ))}
         </AnimatePresence>
         <motion.button
-          className="w-32 h-32 rounded-full focus:outline-none flex items-center justify-center relative overflow-visible"
+          className="w-32 h-32 rounded-full focus:outline-none flex items-center justify-center relative overflow-visible
+                             filter drop-shadow-[0_0_15px_rgba(16,185,129,0.3)] hover:drop-shadow-[0_0_20px_rgba(16,185,129,0.4)]"
           animate={{
             scale: isTapping ? 0.95 : 1,
           }}
@@ -224,7 +228,7 @@ export default function MobileClicker() {
       </div>
 
       {isMotionSupported && (
-        <p className="mt-4 text-white text-center">
+        <p className="mt-6 text-emerald-300 text-center text-sm bg-emerald-950/30 px-4 py-2 rounded-lg backdrop-blur-sm">
           You can also increase the score by shaking your device!
         </p>
       )}
