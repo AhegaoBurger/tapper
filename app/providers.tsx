@@ -1,7 +1,8 @@
 "use client";
 import { TonConnectUIProvider } from "@tonconnect/ui-react";
 
-const manifestUrl = "https://tapper-xi.vercel.app/tonconnect-manifest.json";
+const manifestUrl =
+  process.env.NEXT_PUBLIC_SITE_URL + "/tonconnect-manifest.json";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (

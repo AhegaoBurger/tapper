@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Providers } from "./providers";
+import AdSense from "@/components/AdSense";
 
 export const metadata: Metadata = {
   title: "Tapper dude",
@@ -12,8 +13,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const pId = process.env.ADSENSE_PID as string;
   return (
     <html lang="en">
+      <head>
+        <AdSense pId={pId} />
+      </head>
       <body>
         <Providers>{children}</Providers>
       </body>
