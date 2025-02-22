@@ -14,6 +14,7 @@ const Leaderboard = dynamic(() => import("@/components/Leaderboard"), {
 });
 
 import TonConnectButton from "@/components/TonConnect";
+import AdBanner from "@/components/adsense/AdBanner";
 
 export default function ClientWrapper() {
   return (
@@ -21,6 +22,11 @@ export default function ClientWrapper() {
       <TonConnectButton />
       <MobileClicker />
       <Leaderboard />
+      <AdBanner
+        dataAdFormat="auto"
+        dataFullWidthResponsive={true}
+        dataAdSlot="4777889819"
+      />
     </>
   );
 }
