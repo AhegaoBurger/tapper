@@ -1,7 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Providers } from "./providers";
-import AdSense from "@/components/AdSense";
+import AdSense from "@/components/adsense/AdSense";
 
 export const metadata: Metadata = {
   title: "Tapper dude",
