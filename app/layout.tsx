@@ -17,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <AdSense pId={pId} />
+        <AdSense pId="ca-pub-7071713894070581" />
       </head>
       <body>
         <Providers>{children}</Providers>
